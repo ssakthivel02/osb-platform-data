@@ -10,20 +10,20 @@ DECLARE
   tenant_b uuid;
   visible_count integer;
 BEGIN
-  SELECT id INTO tenant_a FROM tenants WHERE tenant_key = 'ci-tenant-a';
-  SELECT id INTO tenant_b FROM tenants WHERE tenant_key = 'ci-tenant-b';
+  SELECT tenant_id INTO tenant_a FROM tenants WHERE tenant_key = 'ci-tenant-a';
+  SELECT tenant_id INTO tenant_b FROM tenants WHERE tenant_key = 'ci-tenant-b';
 
-  INSERT INTO content_items (tenant_id, slug, title, language_code, editorial_status, payload)
+  INSERT INTO content_items (tenant_id, canonical_key, content_type, title, language_code, body, editorial_status, provenance)
   VALUES
-    (tenant_a, 'ci-a-content', 'Tenant A content', 'en', 'draft', '{}'::jsonb),
-    (tenant_b, 'ci-b-content', 'Tenant B content', 'en', 'draft', '{}'::jsonb)
-  ON CONFLICT DO NOTHING;
+    (tenant_a, 'ci-a-content', 'test', 'Tenant A content', 'en', '{}'::jsonb, 'draft', '{}'::jsonb),
+    (tenant_b, 'ci-b-content', 'test', 'Tenant B content', 'en', '{}'::jsonb, 'draft', '{}'::jsonb)
+  ON CONFLICT (canonical_key) DO NOTHING;
 
   PERFORM set_config('app.tenant_id', tenant_a::text, true);
   SET LOCAL ROLE osb_app;
   SELECT count(*) INTO visible_count
   FROM content_items
-  WHERE slug IN ('ci-a-content', 'ci-b-content');
+  WHERE canonical_key IN ('ci-a-content', 'ci-b-content');
   RESET ROLE;
 
   IF visible_count <> 1 THEN

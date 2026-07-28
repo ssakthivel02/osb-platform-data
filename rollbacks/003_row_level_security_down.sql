@@ -1,0 +1,12 @@
+BEGIN;
+DROP POLICY IF EXISTS preservation_tenant_isolation ON preservation_events;
+DROP POLICY IF EXISTS privacy_tenant_isolation ON privacy_records;
+DROP POLICY IF EXISTS audit_tenant_isolation ON audit_events;
+DROP POLICY IF EXISTS rights_tenant_isolation ON rights_records;
+DROP POLICY IF EXISTS content_tenant_isolation ON content_items;
+ALTER TABLE preservation_events DISABLE ROW LEVEL SECURITY;
+ALTER TABLE privacy_records DISABLE ROW LEVEL SECURITY;
+ALTER TABLE audit_events DISABLE ROW LEVEL SECURITY;
+ALTER TABLE rights_records DISABLE ROW LEVEL SECURITY;
+ALTER TABLE content_items DISABLE ROW LEVEL SECURITY;
+COMMIT;

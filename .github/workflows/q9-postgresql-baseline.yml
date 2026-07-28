@@ -1,0 +1,45 @@
+name: Q9 PostgreSQL baseline
+
+on:
+  pull_request:
+    paths:
+      - 'migrations/**'
+      - 'tests/q9_**'
+      - 'scripts/q9_**'
+      - '.github/workflows/q9-postgresql-baseline.yml'
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: q9-postgresql-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16.3-alpine
+        env:
+          POSTGRES_DB: osb_test
+          POSTGRES_USER: osb_test
+          POSTGRES_PASSWORD: osb_test_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U osb_test -d osb_test"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 12
+    env:
+      DATABASE_URL: postgresql://osb_test:osb_test_password@localhost:5432/osb_test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+      - name: Validate apply, assertions, rollback and reapply
+        run: sh scripts/q9_validate_baseline.sh

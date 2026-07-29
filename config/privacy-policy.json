@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "dataMinimisation": true,
+  "purposeLimitation": true,
+  "consentTracking": true,
+  "subjectAccessSupported": true,
+  "deletionWorkflowRequired": true,
+  "legalHoldSupported": true,
+  "restrictedFields": ["credentials", "payment_card", "child_sensitive_data"],
+  "exportRequiresAuthorisation": true,
+  "maskingRequiredOutsideProduction": true
+}

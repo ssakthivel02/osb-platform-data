@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "apiPrefix": "/api/v1/data",
+  "requiredLocales": ["en-GB", "ta-IN"],
+  "tenantIsolation": true,
+  "serverAuthoritativeTenantScope": true,
+  "encryptionAtRest": true,
+  "encryptionInTransit": true,
+  "dataClassification": ["public", "internal", "confidential", "restricted"],
+  "lineageRequired": true,
+  "schemaVersioningRequired": true,
+  "retentionPolicyRequired": true,
+  "auditRetentionDays": 2555
+}
